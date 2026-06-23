@@ -1,0 +1,12 @@
+<!--pages/login/login.wxml-->
+<view class="login-wrap">
+  <text class="login-title">用户登录</text>
+
+  <form bindsubmit="login">
+    <input type="text" placeholder="请输入用户名" bindblur="getUsername"/>
+    <input type="password" placeholder="请输入密码" bindblur="getPassword"/>
+    <button type="primary" bind:tap="login">登录</button>
+  </form>
+
+  <text class="regist" bind:tap="toReg" >没有账号？去注册</text>
+</view>

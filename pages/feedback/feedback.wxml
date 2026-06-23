@@ -1,0 +1,16 @@
+<!--pages/feedback/feedback.wxml-->
+<view class="wrap">
+  <view class="title">意见反馈</view>
+  <form bindsubmit="subFeed">
+    <view class="input-box">
+      <text class="label">反馈标题</text>
+      <input name="title" placeholder="请输入反馈标题"/>
+    </view>
+    <view class="textarea-box">
+      <text class="label">反馈内容</text>
+      <textarea name="content" placeholder="请详细描述你的问题或建议"></textarea>
+    </view>
+    <button form-type="submit" class="sub-btn">提交反馈</button>
+  </form>
+  <view class="list-tip" bind:tap="toFeedList">查看我的反馈记录 ></view>
+</view>

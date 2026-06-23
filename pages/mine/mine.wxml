@@ -1,0 +1,53 @@
+<!--pages/mine/mine.wxml-->
+<!-- 我的 -->
+<view class="mine-page">
+  <!-- 个人信息,未登录点击跳转登录 -->
+  <view class="user-header" bind:tap="toLogin" wx:if="{{!userInfo}}">
+    <image class="user-avatar" src="/images/avatar.png" mode="aspectFill" />
+    <text class="user-name">未登录</text>
+  </view>
+  <!-- 已登录展示用户信息 -->
+  <view class="user-header" wx:else>
+    <image class="user-avatar" src="/images/avatar-log.png" mode="aspectFill" />
+    <text class="user-name">{{userInfo.nickName}}</text>
+  </view>
+
+  <!-- 订单状态 -->
+  <view class="order-status card" bind:tap="toOrder">
+    <text class="section-title">我的订单</text>
+    <view class="order-grid">
+      <view class="order-item">
+        <text class="order-label">全部订单</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-list card">
+    <view class="menu-item" bind:tap="toCollect">
+      <text>我的收藏</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bind:tap="toAddress">
+      <text>收货地址</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bind:tap="toFeedback">
+      <text>意见反馈</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bind:tap="toChangeInfo">
+      <text>修改个人信息</text>
+      <text class="menu-arrow">›</text>
+    </view>
+    <view class="menu-item" bind:tap="toChangePwd">
+      <text>修改密码</text>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{userInfo}}">
+    <button class="btn-secondary" bind:tap="Logout" type="warn">退出登录</button>
+  </view>
+</view>

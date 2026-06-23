@@ -1,0 +1,14 @@
+<!--pages/regist/regist.wxml-->
+<text>用户注册</text>
+
+<form bindsubmit="regist">
+  <input type="text" placeholder="用户名" name="userName"/>
+  <input type="text" placeholder="昵称" name="nickName"/>
+  <input type="text" placeholder="密码" name="password"/>
+  <input type="number" placeholder="电话号码" name="phonenumber"/>
+  <radio-group bindchange="" name="sex">
+    <radio value="0">男</radio>
+    <radio value="1">女</radio>
+  </radio-group>
+  <button type="primary" form-type="submit">注册</button>
+</form>

@@ -1,0 +1,23 @@
+# 小程序本地私有配置（每个人AppID不同，禁止上传）
+project.private.config.json
+# npm依赖缓存
+node_modules/
+miniprogram_npm/
+# 系统文件
+.DS_Store
+Thumbs.db
+# 日志、临时文件
+*.log
+*.swp
+# 密钥、证书
+*.pem
+*.key
+# 开发者工具缓存
+.wxsscache
+# 忽略文档类
+*.md
+*.pdf
+*.docx
+*.doc
+# 忽略微信本地配置文件
+project.config.json

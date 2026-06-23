@@ -1,0 +1,30 @@
+<!--pages/changeInfo/changeInfo.wxml-->
+<view class="page-wrap">
+  <view class="page-title">修改个人信息</view>
+  <form bindsubmit="saveUserInfo">
+    <view class="form-item">
+      <text class="label">昵称</text>
+      <input name="nickName" value="{{user.nickName}}" placeholder="请输入昵称"/>
+    </view>
+    <view class="form-item">
+      <text class="label">手机号</text>
+      <input name="phonenumber" value="{{user.phonenumber}}" placeholder="请输入手机号"/>
+    </view>
+    <view class="form-item">
+      <text class="label">邮箱</text>
+      <input name="email" value="{{user.email}}" placeholder="请输入邮箱"/>
+    </view>
+    <view class="form-item">
+      <text class="label">身份证</text>
+      <input name="idCard" value="{{user.idCard}}" placeholder="请输入身份证号"/>
+    </view>
+    <view class="form-item">
+      <text class="label">性别</text>
+      <radio-group name="sex">
+        <label><radio value="0" checked="{{user.sex==='0'}}"/>男</label>
+        <label><radio value="1" checked="{{user.sex==='1'}}"/>女</label>
+      </radio-group>
+    </view>
+    <button form-type="submit" class="submit-btn">保存修改</button>
+  </form>
+</view>

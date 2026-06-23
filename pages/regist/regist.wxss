@@ -1,0 +1,7 @@
+/* pages/regist/regist.wxss */
+
+input{
+  border-bottom: 1rpx solid saddlebrown;
+  height: 80rpx;
+  margin: 40rpx;
+}

@@ -1,0 +1,15 @@
+<!--pages/changePwd/changePwd.wxml-->
+<view class="page-wrap">
+  <view class="page-title">修改登录密码</view>
+  <form bindsubmit="resetPwd">
+    <view class="form-item">
+      <text class="label">旧密码</text>
+      <input name="oldPassword" type="password" placeholder="请输入当前密码"/>
+    </view>
+    <view class="form-item">
+      <text class="label">新密码</text>
+      <input name="newPassword" type="password" placeholder="请输入新密码"/>
+    </view>
+    <button form-type="submit" class="submit-btn">确认修改</button>
+  </form>
+</view>

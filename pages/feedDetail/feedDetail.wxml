@@ -1,0 +1,18 @@
+<!--pages/feedDetail/feedDetail.wxml-->
+<view class="wrap">
+  <view class="title">反馈详情</view>
+  <view class="detail-box">
+    <view class="row">
+      <text class="k">标题：</text>
+      <text class="v">{{feedInfo.title}}</text>
+    </view>
+    <view class="row">
+      <text class="k">内容：</text>
+      <text class="v">{{feedInfo.content}}</text>
+    </view>
+    <view class="row">
+      <text class="k">反馈ID：</text>
+      <text class="v">{{feedInfo.id}}</text>
+    </view>
+  </view>
+</view>

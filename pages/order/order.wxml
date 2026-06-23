@@ -1,0 +1,39 @@
+<!--pages/order/order.wxml-->
+<view class="wrap">
+  <view class="page-title">我的全部订单</view>
+
+  <!-- 空订单判断 -->
+  <view wx:if="{{odList.length === 0}}" class="empty-tip">
+    暂无订单数据
+  </view>
+
+  <!-- 订单列表循环 -->
+  <view wx:else>
+    <view class="order-item" wx:for="{{odList}}" wx:key="id">
+      <view class="row">
+        <text class="label">订单编号：</text>
+        <text class="val">{{item.orderNo}}</text>
+      </view>
+      <view class="row">
+        <text class="label">商家：</text>
+        <text class="val">{{item.name}}</text>
+      </view>
+      <view class="row">
+        <text class="label">订单类型：</text>
+        <text class="val">{{item.orderTypeName}}</text>
+      </view>
+      <view class="row">
+        <text class="label">订单状态：</text>
+        <text class="val status">{{item.orderStatus}}</text>
+      </view>
+      <view class="row">
+        <text class="label">订单金额：</text>
+        <text class="val price">¥{{item.amount}}</text>
+      </view>
+      <view class="row">
+        <text class="label">支付时间：</text>
+        <text class="val">{{item.payTime}}</text>
+      </view>
+    </view>
+  </view>
+</view>

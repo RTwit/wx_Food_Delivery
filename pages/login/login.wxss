@@ -1,0 +1,26 @@
+/* pages/login/login.wxss */
+.login-wrap {
+  padding: 60rpx 50rpx;
+}
+.login-title {
+  font-size: 42rpx;
+  display: block;
+  margin-bottom: 60rpx;
+  color: #222;
+}
+input{
+  border-bottom: 1rpx solid saddlebrown;
+  height: 80rpx;
+  margin: 40rpx;
+}
+/* 红色注册文字，和登录按钮拉开距离 */
+.regist {
+  display: block;
+  text-align: center;
+  color: #f53f3f;
+  font-size: 32rpx;
+  margin-top: 50rpx;
+}
+.regist:active {
+  opacity: 0.6;
+}
