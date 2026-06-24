@@ -7,6 +7,8 @@ Page({
   data: {
     baseUrl:'http://111.231.33.234:10001',
     odList:[],
+    filList:[],
+    currentTab:0,
   },
 
   /**
@@ -14,6 +16,32 @@ Page({
    */
   onLoad(options) {
     this.getOrderList()
+  },
+
+   // 切换
+   change(e){
+    const idx = e.currentTarget.dataset.index
+    this.setData({
+      currentTab: Number(idx)
+    })
+    this.filterOd()
+  },
+  // 根据选项过滤订单
+  filterOd(){
+    const tab = this.data.currentTab
+    const all = this.data.odList
+    let res = []
+    if(tab === 0){
+      // 全部订单
+      res = all
+    }else if(tab === 1){
+      // 待评价（自行匹配后端状态文字，按需修改判断条件）
+      res = all.filter(item=>item.orderStatus.includes('待评价'))
+    }else if(tab === 2){
+      // 退款/售后
+      res = all.filter(item=>item.orderStatus.includes('退款') || item.orderStatus.includes('售后'))
+    }
+    this.setData({filList:res})
   },
 
   // 获取订单列表
@@ -38,8 +66,9 @@ Page({
           console.log('orderlist',res);
           // 赋值订单
           this.setData({
-            orderList: res.data.rows
+            odList: res.data.rows
           })
+          this.filterOd()
         } else {
           wx.showToast({
             title: res.data.msg,

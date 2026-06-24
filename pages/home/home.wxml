@@ -39,11 +39,13 @@
   </view>
 
   <!-- 附近商家 -->
+  <view class="sticky-title-wrap">
+  <view class="title-row">
+    <text class="section-title">附近商家</text>
+    <text class="more-btn" bind:tap="toSeller">更多 ></text>
+  </view>
+</view>
   <view class="seller-section">
-    <view class="sticky-title-wrap">
-      <text class="section-title">附近商家</text>
-    </view>
-    <!-- <text class="section-title">附近商家</text> -->
     <view wx:if="{{sellerList.length === 0 && !loading}}" class="empty-state">
       <text>暂无商家</text>
     </view>

@@ -1,1 +1,43 @@
 /* pages/sellerDet/sellerDet.wxss */
+.wrap {
+  background: #f6f6f6;
+  min-height: 100vh;
+}
+.detail-img {
+  width: 100%;
+  height: 400rpx;
+}
+.info-box {
+  background: #fff;
+  margin: 20rpx 16rpx;
+  border-radius: 12rpx;
+  padding: 30rpx;
+}
+.shop-name {
+  font-size: 38rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 20rpx;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 28rpx;
+  color: #555;
+  margin-bottom: 16rpx;
+}
+.score {
+  color: orangered;
+}
+.desc, .address {
+  font-size: 28rpx;
+  color: #666;
+  margin-top: 20rpx;
+  line-height: 1.6;
+}
+.loading {
+  text-align: center;
+  padding-top: 200rpx;
+  font-size: 30rpx;
+  color: #999;
+}

@@ -7,8 +7,30 @@
 .page-title {
   font-size: 40rpx;
   text-align: center;
-  margin-bottom: 50rpx;
+  margin-bottom: 30rpx;
   color: #222;
+}
+/* 顶部标签 */
+.tab-wrap {
+  display: flex;
+  width: 100%;
+  margin-bottom: 40rpx;
+  gap: 20rpx;
+}
+.tab-item {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+  background: #fff;
+  border-radius: 10rpx;
+  font-size: 30rpx;
+  color: #666;
+}
+/* 选中高亮 */
+.tab-item.active {
+  background: #ff7800;
+  color: #fff;
 }
 .empty-tip {
   text-align: center;

@@ -17,7 +17,7 @@ Page({
   onLoad(options) {
     this.getADList()
     this.getThemeList()
-    this.getSellerList()
+    this.getNearSelList()
   },  
 
   //搜索
@@ -71,31 +71,39 @@ Page({
       })
     },
 
-    //商家列表
-    getSellerList(){
-      //加载中
-      this.setData({ loading: true })
-      let url = this.data.baseUrl + '/prod-api/api/takeout/seller/list'
-      wx.request({
-        url: url,
-        success:res=>{
-          console.log('seller', res);
-          // const rows = res.data.rows || [];
-          this.setData({
-            sellerList: res.data.rows,
-            loading: false
-          })
-        },
-        fail() {
-          this.setData({ loading: false })//隐藏
-        }
+    //跳转全部商家页
+    toSeller(e){
+      console.log('toSeller',e);
+      wx.navigateTo({
+        url:'/pages/seller/seller'
       })
     },
-
+    // 获取附近商家列表
+    getNearSelList() {
+      const token = wx.getStorageSync('token')
+      let url = this.data.baseUrl + '/prod-api/api/takeout/seller/near'
+      // ?pageNum=1&pageSize=10
+      wx.request({
+        url: url,
+        success: res => {
+          console.log('nearSel',res);
+          this.setData({
+            sellerList: res.data.rows
+          })  
+        },
+        fail: () => 
+        wx.showToast({
+           title: '网络加载失败', 
+           icon: 'none'
+           })
+      })
+    },
     //点击查看商家详情
     toSellerDet(e) {
       const id = e.currentTarget.dataset.id
-      wx.navigateTo({ url: `/pages/sellerDet/sellerDet?id=${id}` })
+      wx.navigateTo({
+         url: `/pages/sellerDet/sellerDet?id=${id}` 
+        })
     },
 
   // 下拉刷新

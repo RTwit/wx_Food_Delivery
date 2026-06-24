@@ -125,7 +125,16 @@ button.search-btn::after {
   z-index: 99; /* 层级高于列表，不会被盖住 */
   padding: 20rpx 0;
 }
-
+.title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16rpx;
+}
+.more-btn {
+  font-size: 28rpx;
+  color: #ff7800;
+}
 .seller-card {
   display: flex;
   flex-direction: row;

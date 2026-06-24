@@ -1,2 +1,28 @@
 <!--pages/sellerDet/sellerDet.wxml-->
-<text>pages/sellerDet/sellerDet.wxml</text>
+<view class="wrap">
+  <view wx:if="{{detailInfo.id}}">
+    <image class="detail-img" src="{{detailInfo.imgUrl}}" mode="aspectFill" />
+    <view class="info-box">
+      <text class="shop-name">{{detailInfo.name}}</text>
+      <view class="row">
+        <text>评分：</text>
+        <text class="score">{{detailInfo.score}}分</text>
+      </view>
+      <view class="row">
+        <text>人均：¥{{detailInfo.avgCost}}</text>
+        <text>月售{{detailInfo.saleQuantity}}</text>
+      </view>
+      <view class="row">
+        <text>配送距离：{{detailInfo.distance}}m</text>
+        <text>配送时长：{{detailInfo.deliveryTime}}分钟</text>
+      </view>
+      <view class="desc">
+        <text>商家简介：{{detailInfo.introduction}}</text>
+      </view>
+      <view class="address">
+        <text>门店地址：{{detailInfo.address}}</text>
+      </view>
+    </view>
+  </view>
+  <view wx:else class="loading">加载中...</view>
+</view>

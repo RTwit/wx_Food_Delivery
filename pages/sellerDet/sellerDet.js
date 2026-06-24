@@ -5,14 +5,35 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    baseUrl:'http://111.231.33.234:10001',
+    detailInfo:{}
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    const sellerId = options.id
+    this.getSellerDetail(sellerId)
+  },
 
+  // 获取商家详情
+  getSellerDet(id) {
+    let url = this.data.baseUrl + '/prod-api/api/takeout/seller/'
+    wx.request({
+      url: url + id,
+      success: res => {
+        console.log('sellerDet',res);
+        this.setData({
+          detailInfo: res.data.data
+        })
+      },
+      fail: () => 
+      wx.showToast({
+         title: '加载详情失败', 
+         icon: 'none' 
+        })
+    })
   },
 
   /**

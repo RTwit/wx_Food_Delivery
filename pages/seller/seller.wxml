@@ -1,2 +1,21 @@
 <!--pages/seller/seller.wxml-->
-<text>pages/seller/seller.wxml</text>
+<view class="wrap">
+  <view class="page-title">全部分类商家</view>
+  <!-- 搜索框 -->
+  <view class="search-box">
+    <input class="search-input" placeholder="输入商家名称" bindinput="inChange" value="{{searchName}}"/>
+    <button bind:tap="schSeller">搜索</button>
+  </view>
+  <!-- 分类筛选可自行加tab -->
+  <view wx:if="{{allSel.length === 0}}" class="empty-tip">暂无商家</view>
+  <view wx:else>
+    <view class="seller-card" wx:for="{{allSeller}}" wx:key="id" bind:tap="toSellerDet" data-id="{{item.id}}">
+      <image class="seller-img" src="{{item.imgUrl}}" mode="aspectFill"/>
+      <view class="seller-info">
+        <text class="seller-name">{{item.name}}</text>
+        <text class="text-tip">人均¥{{item.avgCost}} | 月售{{item.saleQuantity}}</text>
+        <text class="text-tip text-tip--bold">{{item.score}}分</text>
+      </view>
+    </view>
+  </view>
+</view>

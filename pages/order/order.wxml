@@ -2,6 +2,12 @@
 <view class="wrap">
   <view class="page-title">我的全部订单</view>
 
+  <view class="tab-wrap">
+    <view class="tab-item {{currentTab===0?'active':''}}" bind:tap="change" data-index="0">全部订单</view>
+    <view class="tab-item {{currentTab===1?'active':''}}" bind:tap="change" data-index="1">待评价</view>
+    <view class="tab-item {{currentTab===2?'active':''}}" bind:tap="change" data-index="2">退款/售后</view>
+  </view>
+
   <!-- 空订单判断 -->
   <view wx:if="{{odList.length === 0}}" class="empty-tip">
     暂无订单数据
