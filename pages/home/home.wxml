@@ -40,7 +40,10 @@
 
   <!-- 附近商家 -->
   <view class="seller-section">
-    <text class="section-title">附近商家</text>
+    <view class="sticky-title-wrap">
+      <text class="section-title">附近商家</text>
+    </view>
+    <!-- <text class="section-title">附近商家</text> -->
     <view wx:if="{{sellerList.length === 0 && !loading}}" class="empty-state">
       <text>暂无商家</text>
     </view>

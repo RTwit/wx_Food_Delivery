@@ -80,7 +80,7 @@ Page({
         url: url,
         success:res=>{
           console.log('seller', res);
-          const rows = res.data.rows || [];
+          // const rows = res.data.rows || [];
           this.setData({
             sellerList: res.data.rows,
             loading: false
