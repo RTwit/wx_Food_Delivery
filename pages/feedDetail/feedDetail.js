@@ -21,7 +21,7 @@ Page({
   getFeedDetail(id) {
     const token = wx.getStorageSync('token')
     wx.request({
-      url: `${this.data.baseUrl}/prod-api/api/common/feedback/${id}`,
+      url: `${this.data.baseUrl}/prod-api/api/takeout/feedback/${id}`,
       method: "GET",
       header: {
         Authorization: token,

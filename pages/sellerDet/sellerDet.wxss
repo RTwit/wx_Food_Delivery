@@ -41,3 +41,57 @@
   font-size: 30rpx;
   color: #999;
 }
+/* 分类横向 */
+.tab-scroll {
+  background: #fff;
+  white-space: nowrap;
+  padding: 0 20rpx;
+}
+.tab-item {
+  display: inline-block;
+  padding: 24rpx 32rpx;
+  font-size: 30rpx;
+  color: #666;
+}
+.tab-item.active {
+  color: #ff4500;
+  border-bottom: 4rpx solid #ff4500;
+}
+
+/* 菜品列表 */
+.product-list {
+  padding: 20rpx;
+}
+.product-item {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  gap: 20rpx;
+}
+.pro-img {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+.pro-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.pro-name {
+  font-size: 32rpx;
+  color: #111;
+}
+.pro-price {
+  font-size: 30rpx;
+  color: #ff4500;
+  margin: 8rpx 0;
+}
+.pro-desc, .pro-sales {
+  font-size: 24rpx;
+  color: #888;
+}

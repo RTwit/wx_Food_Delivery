@@ -1,9 +1,15 @@
 <!--pages/sellerDet/sellerDet.wxml-->
 <view class="wrap">
-  <view wx:if="{{detailInfo.id}}">
-    <image class="detail-img" src="{{detailInfo.imgUrl}}" mode="aspectFill" />
+  <view wx:if="{{loading}}" class="loading">加载中...</view>
+
+  <!-- 商家内容 -->
+  <view wx:elif="{{detailInfo.id}}">
+    <image class="detail-img" src="{{baseUrl}}{{detailInfo.imgUrl}}" mode="aspectFill" binderror="imgError"/>
+
+    <!-- 商家信息 -->
     <view class="info-box">
       <text class="shop-name">{{detailInfo.name}}</text>
+      <view class="desc">商家简介：{{detailInfo.introduction}}</view>
       <view class="row">
         <text>评分：</text>
         <text class="score">{{detailInfo.score}}分</text>
@@ -16,13 +22,31 @@
         <text>配送距离：{{detailInfo.distance}}m</text>
         <text>配送时长：{{detailInfo.deliveryTime}}分钟</text>
       </view>
-      <view class="desc">
-        <text>商家简介：{{detailInfo.introduction}}</text>
+      <view class="address">门店地址：{{detailInfo.address}}</view>
+    </view>
+
+    <!-- 菜品分类 -->
+    <scroll-view scroll-x class="tab-scroll">
+      <view class="tab-item {{curCatId == item.id ? 'active' : ''}}" 
+            wx:for="{{catList}}" 
+            wx:key="id"
+            bind:tap="switchCat"
+            data-cid="{{item.id}}">
+        {{item.name}}
       </view>
-      <view class="address">
-        <text>门店地址：{{detailInfo.address}}</text>
+    </scroll-view>
+
+    <!-- 菜品列表 -->
+    <view class="product-list">
+      <view class="product-item" wx:for="{{prodList}}" wx:key="id">
+        <image class="pro-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" binderror="imgError"/>
+        <view class="pro-info">
+          <text class="pro-name">{{item.name}}</text>
+          <text class="pro-price">¥{{item.price}}</text>
+          <text class="pro-desc">{{item.detail}}</text>
+          <text class="pro-sales">月销{{item.saleQuantity}}</text>
+        </view>
       </view>
     </view>
   </view>
-  <view wx:else class="loading">加载中...</view>
 </view>

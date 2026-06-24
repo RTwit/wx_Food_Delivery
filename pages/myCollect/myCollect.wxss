@@ -1,1 +1,32 @@
 /* pages/myCollect/myCollect.wxss */
+.empty{
+  text-align: center;
+  margin-top: 200rpx;
+  color: #999;
+}
+.collect-item{
+  display: flex;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #eee;
+  align-items: center;
+}
+.shop-img{
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+}
+.shop-info{
+  flex: 1;
+}
+.shop-name{
+  font-size: 32rpx;
+  font-weight: bold;
+  display:block;
+}
+.shop-tip,.shop-address{
+  font-size: 24rpx;
+  color: #666;
+  display:block;
+  margin-top: 8rpx;
+}

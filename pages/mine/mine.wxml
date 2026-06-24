@@ -26,23 +26,18 @@
   <view class="menu-list card">
     <view class="menu-item" bind:tap="toCollect">
       <text>我的收藏</text>
-      <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bind:tap="toAddress">
       <text>收货地址</text>
-      <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bind:tap="toFeedback">
       <text>意见反馈</text>
-      <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bind:tap="toChangeInfo">
       <text>修改个人信息</text>
-      <text class="menu-arrow">›</text>
     </view>
     <view class="menu-item" bind:tap="toChangePwd">
       <text>修改密码</text>
-      <text class="menu-arrow">›</text>
     </view>
   </view>
 

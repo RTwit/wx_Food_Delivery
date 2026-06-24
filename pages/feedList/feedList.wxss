@@ -34,8 +34,3 @@
   color:#777;
   margin-top:10rpx;
 }
-
-.arrow{
-  color:#ccc;
-  font-size:36rpx;
-}

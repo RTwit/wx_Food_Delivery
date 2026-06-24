@@ -12,5 +12,5 @@
     </view>
     <button form-type="submit" class="sub-btn">提交反馈</button>
   </form>
-  <view class="list-tip" bind:tap="toFeedList">查看我的反馈记录 ></view>
+  <view class="list-tip" bind:tap="toFeedList">查看我的反馈记录 </view>
 </view>

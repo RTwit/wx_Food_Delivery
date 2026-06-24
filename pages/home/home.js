@@ -44,7 +44,7 @@ Page({
   },
   // 轮播图点击
   toAdsTap(e) {
-    const item = e.currentTarget.dataset.item
+    let item = e.target.dataset.item
     if (item.servModule === '外卖店家' && item.targetId) {
       wx.navigateTo({ url: `/pages/sellerDet/sellerDet?id=${item.targetId}` })
     }
@@ -65,7 +65,7 @@ Page({
   },
     // 点击分类
     toThemeTap(e) {
-      const theme = e.currentTarget.dataset.theme
+      let theme = e.target.dataset.theme
       wx.navigateTo({
         url: `/pages/seller/seller?themeId=${theme.id}&themeName=${theme.name}`
       })
@@ -80,9 +80,7 @@ Page({
     },
     // 获取附近商家列表
     getNearSelList() {
-      const token = wx.getStorageSync('token')
       let url = this.data.baseUrl + '/prod-api/api/takeout/seller/near'
-      // ?pageNum=1&pageSize=10
       wx.request({
         url: url,
         success: res => {
@@ -98,9 +96,17 @@ Page({
            })
       })
     },
+    // 图片加载失败替换本地默认图
+    imgError(e) {
+      let idx = e.target.dataset.index
+      let key = 'sellerList[' + idx + '].imgUrl'
+      this.setData({
+        [key]: "/images/pic-default.png"
+      })
+    },
     //点击查看商家详情
     toSellerDet(e) {
-      const id = e.currentTarget.dataset.id
+      let id = e.currentTarget.dataset.id
       wx.navigateTo({
          url: `/pages/sellerDet/sellerDet?id=${id}` 
         })
@@ -113,6 +119,61 @@ Page({
     this.getThemeList();
     this.getSellerList();
     wx.stopPullDownRefresh()
+  },
+
+  //收藏
+  collect(e){
+    let token = wx.getStorageSync('token')
+    //登录判断
+    if(!token){
+      wx.showModal({
+        title: '登录提示',
+        content: '收藏店铺需要先登录账号，是否去登录？',
+        confirmText: '去登录',
+        cancelText: '取消',
+        success: (res) => {
+          // 用户点击确认，跳登录页面
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            })
+          }
+        }
+      })
+      return
+    }
+    //主体
+    let sellerId = e.currentTarget.dataset.id
+    console.log('传递到sellerId:',sellerId);
+    let url = this.data.baseUrl + '/prod-api/api/takeout/collect'
+    wx.request({
+      url : url,
+      method : 'POST',
+      header:{
+        Authorization:token,
+        'content-type': 'application/json'
+      },
+      data: {
+        sellerId: Number(sellerId) 
+      },
+      success:res=>{
+        console.log('collect', res);
+        if(res.data.code == 200){
+          wx.showToast({
+            title: '收藏成功',
+          icon: 'success'
+        })
+        }else{
+          wx.showToast({
+            title: res.data.msg, 
+            icon:'none'
+          })
+        }
+      },
+      fail:err=>{
+        console.log(err);
+      }
+    })
   },
 
   /**

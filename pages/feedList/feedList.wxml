@@ -8,7 +8,6 @@
     <view class="feed-item" wx:for="{{feedList}}" wx:key="id" bind:tap="toDetail" data-id="{{item.id}}">
       <view class="item-title">{{item.title}}</view>
       <view class="item-content">{{item.content}}</view>
-      <text class="arrow">></text>
     </view>
   </block>
 </view>

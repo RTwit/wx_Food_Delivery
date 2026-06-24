@@ -7,7 +7,8 @@ Page({
   data: {
     baseUrl:'http://111.231.33.234:10001',
     allSelList:[],
-    schName: ""
+    schName: "",
+    loading:false,
   },
   
 
@@ -19,26 +20,49 @@ Page({
   },
 
   //全部商家列表
-  getAllSelList(themeId = '', schName = ''){
+  getAllSelList(){
     //加载中
     this.setData({
        loading: true 
       })
     let url = this.data.baseUrl + '/prod-api/api/takeout/seller/list'
-    if(themeId) url += `&themeId=${themeId}`
-    if(schName) url += `&name=${schName}`
     wx.request({
       url: url,
       success:res=>{
-        console.log('seller', res);
-        // const rows = res.data.rows || [];
+        console.log('allSeller', res);
         this.setData({
           allSelList: res.data.rows,
           loading: false
         })
       },
       fail() {
-        this.setData({ loading: false })//隐藏
+        this.setData({ loading: false })
+        wx.showToast({title:"加载商家失败", icon:"none"})
+      }
+    })
+  },
+  // 搜索方法
+  schShop(keyword) {
+    this.setData({ loading: true })
+    let url = this.data.baseUrl + '/prod-api/api/takeout/search?pageNum=1&pageSize=10&keyword=' + keyword
+    wx.request({
+      url: url,
+      success:res=>{
+        console.log('搜索商家', res);
+        const map = new Map()
+        const uniqueShop = res.data.rows.filter(item=>{
+          if(map.has(item.id)) return false
+          map.set(item.id, true)
+          return true
+        })
+        this.setData({
+          allSelList: uniqueShop,
+          loading: false
+        })
+      },
+      fail() {
+        this.setData({ loading: false })
+        wx.showToast({title:"搜索失败", icon:"none"})
       }
     })
   },
@@ -48,17 +72,29 @@ Page({
       schName: e.detail.value
     })
   },
+//失去焦点时加载所有商家
+  inBlur(){
+    if(this.data.schName ==  ''){
+      this.getAllSelList()
+    }
+  },
 
   // 点击搜索按钮
   schSeller() {
-    this.getAllSelList('', this.data.schName)
+    this.schShop(this.data.schName)
   },
 
   // 点击商家跳详情
   toSellerDet(e) {
     const id = e.currentTarget.dataset.id
     wx.navigateTo({
-      url: `/pages/sellerDetail/sellerDetail?id=${id}`
+      url: `/pages/sellerDet/sellerDet?id=${id}`,
+      success : res=>{
+        console.log('toSelDet',res);
+      },
+      fail : err=>{
+        console.log(err);
+      }
     })
   },
 

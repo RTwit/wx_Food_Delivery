@@ -57,7 +57,8 @@
         data-id="{{item.id}}"
         bind:tap="toSellerDet"
       >
-        <image class="seller-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" />
+        <image class="seller-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" binderror="imgError"
+        data-index="{{index}}"/>
         <view class="seller-info">
           <text class="seller-name text-name">{{item.name}}</text>
           <view class="seller-meta">
@@ -69,6 +70,9 @@
           <view class="seller-meta">
             <text class="text-tip text-tip--bold">{{item.score}}分</text>
           </view>
+          <button type="primary" size="mini" catch:tap="collect" data-id="{{item.id}}">
+            <text style="color: black;">收藏</text>
+          </button>
         </view>
       </view>
     </view>

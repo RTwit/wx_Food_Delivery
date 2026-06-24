@@ -20,7 +20,7 @@ Page({
   getFeedList() {
     const token = wx.getStorageSync('token')
     wx.request({
-      url: this.data.baseUrl + '/prod-api/api/common/feedback/list',
+      url: this.data.baseUrl + '/prod-api/api/takeout/feedback/list',
       method: "GET",
       header: {
         Authorization: token,

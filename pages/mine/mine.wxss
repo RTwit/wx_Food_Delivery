@@ -77,11 +77,6 @@
   border-bottom: none;
 }
 
-.menu-arrow {
-  font-size: 36rpx;
-  color: #949494;
-}
-
 .logout-section {
   padding: 48rpx 32rpx;
 }

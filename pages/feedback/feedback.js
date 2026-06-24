@@ -20,6 +20,7 @@ Page({
       },
       data: { title, content },
       success: res => {
+        console.log('subFeed',res);
         if (res.data.code === "200") {
           wx.showToast({
              title: res.data.msg 
