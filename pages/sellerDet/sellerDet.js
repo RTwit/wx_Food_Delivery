@@ -11,6 +11,8 @@ Page({
     catList:[],
     curCatId:0,
     prodList:[],
+    isCollect:false,
+    collId:null,
   },
 
   /**
@@ -21,7 +23,123 @@ Page({
     const sellerId = options.id
     this.getSellerDet(sellerId)
     this.getCatList(sellerId)
+    this.chkCollect(sellerId)
   },
+  //检验是否收藏商家
+  chkCollect(sellerId){
+    let token = wx.getStorageSync('token')
+    let url = `${this.data.baseUrl}/prod-api/api/takeout/collect/check?sellerId=${sellerId}`
+    wx.request({
+      url: url ,
+      header:{
+        Authorization:token,
+        'content-type':'application/x-www-form-urlencoded',
+      },
+      success: res => {
+        console.log('检验是否收藏:', res);
+        if(res.data.code == 200){
+          this.setData({
+            isCollect: res.data.isCollect === "true",
+            collId: res.data.id || null
+          })
+        }
+      },
+      fail: (err) => {
+        console.log('检验是否收藏fou:', err);
+      }
+    })
+  },
+
+  //点击/取消收藏切换
+  chgCollect(){
+    let token = wx.getStorageSync('token')
+    let { baseUrl, isCollect, collId, detailInfo } = this.data
+    let sellerId = detailInfo.id//取出商家ID
+    //登录判断
+    if(!token){
+      wx.showModal({
+        title: '登录提示',
+        content: '收藏店铺需要先登录账号，是否去登录？',
+        confirmText: '去登录',
+        cancelText: '取消',
+        success: (res) => {
+          // 用户点击确认，跳登录页面
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '/pages/login/login'
+            })
+          }
+        }
+      })
+      return
+    }
+  
+    // 当前未收藏 → 新增收藏
+    if(!isCollect){
+      let url = baseUrl + '/prod-api/api/takeout/collect'
+      wx.request({
+        url: url,
+        method:'POST',
+        header:{
+          Authorization:token,
+          'content-type':'application/json',
+        },
+        data: {
+          sellerId: Number(sellerId)
+        },
+        success:res=>{
+          console.log('addColl', res);
+          if(res.data.code == 200){
+            wx.showToast({
+              title: '收藏成功',
+              icon: 'success'
+            })
+            this.chkCollect(sellerId)
+          }else{
+            wx.showToast({
+              title: res.data.msg, 
+              icon:'none'
+            })
+          }
+        },
+        fail:err=>{
+          console.log('addColl',err);
+        }
+      })
+    }
+    // 当前已收藏 → 取消收藏
+    else {
+      let url = `${baseUrl}/prod-api/api/takeout/collect/${collId}`
+      wx.request({
+        url: url,
+        method:'DELETE',
+        header:{
+          Authorization:token,
+          'content-type':'application/x-www-form-urlencoded',
+        },
+        success: res=>{
+          if(res.data.code == 200){
+            wx.showToast({title:'已取消收藏'})
+            this.chkCollect(sellerId)
+            this.setData({
+              isCollect:false,// 更新状态
+              collId: null
+            })
+          }else{
+            wx.showToast({
+              title:res.data.msg,
+              icon:'none'
+            })
+          }
+        },
+        fail: err=>{
+          console.log('removeColl',err);
+        }
+      })
+    }
+  },
+
+  //获取商家详情
   getSellerDet(id) {
     let url = this.data.baseUrl + '/prod-api/api/takeout/seller/' + id
     wx.request({
