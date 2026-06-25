@@ -13,6 +13,8 @@ Page({
     prodList:[],
     isCollect:false,
     collId:null,
+    commentList: [],
+    totComment: 0,
   },
 
   /**
@@ -23,8 +25,50 @@ Page({
     const sellerId = options.id
     this.getSellerDet(sellerId)
     this.getCatList(sellerId)
-    this.chkCollect(sellerId)
+    this.getCommentList(sellerId)
   },
+  // 获取商家评论列表
+  getCommentList(sellerId) {
+    let token = wx.getStorageSync('token')
+    let url = `${this.data.baseUrl}/prod-api/api/takeout/comment/list?sellerId=${sellerId}`
+    wx.request({
+      url: url,
+      header: {
+        Authorization: token,
+        'content-type': 'application/x-www-form-urlencoded'
+      },
+      success: res => {
+        console.log('评论commtent:',res);
+        if (res.data.code !== "200") {
+          wx.showToast({
+             title: res.data.msg, 
+             icon: 'none' 
+            })
+          return
+        }
+        // 赋值评论数据
+        self.setData({
+          commentList: res.data.rows,
+          commentTotal: res.data.total
+        })
+      },
+      fail: (err) => {
+        console.log('评论失败:',err);
+        wx.showToast({
+           title: '加载评论失败，网络异常', 
+           icon: 'none' 
+          })
+      }
+    })
+  },
+
+  //跳转评论页
+  toComment(){
+    wx.navigateTo({
+      url: `/pages/comment/comment?sellerId=${this.data.sellerId}`,
+    })
+  },
+
   //检验是否收藏商家
   chkCollect(sellerId){
     let token = wx.getStorageSync('token')
@@ -38,9 +82,13 @@ Page({
       success: res => {
         console.log('检验是否收藏:', res);
         if(res.data.code == 200){
+          console.log('赋值前isCollect', this.data.isCollect)
           this.setData({
-            isCollect: res.data.isCollect === "true",
+            isCollect: res.data.isCollect,
             collId: res.data.id || null
+          }, ()=>{
+            // setData完成后的回调，打印最新值
+            console.log('赋值后isCollect', this.data.isCollect)
           })
         }
       },
@@ -81,7 +129,7 @@ Page({
         url: url,
         method:'POST',
         header:{
-          Authorization:token,
+          Authorization: token,
           'content-type':'application/json',
         },
         data: {
@@ -94,7 +142,10 @@ Page({
               title: '收藏成功',
               icon: 'success'
             })
-            this.chkCollect(sellerId)
+            // 延迟1.6秒再查询，避开toast渲染阻塞
+            setTimeout(()=>{
+              this.chkCollect(sellerId)
+            }, 1600)
           }else{
             wx.showToast({
               title: res.data.msg, 
@@ -120,11 +171,9 @@ Page({
         success: res=>{
           if(res.data.code == 200){
             wx.showToast({title:'已取消收藏'})
-            this.chkCollect(sellerId)
-            this.setData({
-              isCollect:false,// 更新状态
-              collId: null
-            })
+            setTimeout(()=>{
+              this.chkCollect(sellerId)
+            },1600)
           }else{
             wx.showToast({
               title:res.data.msg,
@@ -142,6 +191,7 @@ Page({
   //获取商家详情
   getSellerDet(id) {
     let url = this.data.baseUrl + '/prod-api/api/takeout/seller/' + id
+    let self = this
     wx.request({
       url:url,
       success: res => {
@@ -150,6 +200,8 @@ Page({
             detailInfo: res.data.data,
             loading: false
           })
+          // 详情加载完毕，再查询收藏状态
+          self.chkCollect(id)
       },
       fail: () => {
         this.setData({ loading: false })
@@ -194,8 +246,8 @@ Page({
 
   // 切换分类
   switchCat(e) {
-    const cid = e.currentTarget.dataset.cid
-    const sellerId = this.data.detailInfo.id
+    let cid = e.currentTarget.dataset.cid
+    let sellerId = this.data.detailInfo.id
     this.setData({ curCatId: cid })
     this.getProdList(sellerId, cid)
   },

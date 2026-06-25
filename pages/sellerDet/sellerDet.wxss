@@ -109,3 +109,74 @@
   font-size: 24rpx;
   color: #888;
 }
+/* 评论列表 */
+.comment-wrap {
+  margin: 30rpx 20rpx;
+  padding: 30rpx;
+  background: #fff;
+  border-radius: 16rpx;
+}
+.comment-title {
+  font-size: 34rpx;
+  font-weight: bold;
+}
+.comment-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom:30rpx;
+}
+.go-comment{
+  font-size:30rpx;
+  color:#ff6700;
+}
+.comment-item {
+  border-bottom: 1rpx #eee solid;
+  padding: 25rpx 0;
+}
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.avatar {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+}
+.nick {
+  font-size: 30rpx;
+  color: #222;
+}
+.star-row {
+  color: #ffb800;
+  font-size: 28rpx;
+}
+.comment-text {
+  font-size: 30rpx;
+  margin: 15rpx 0;
+  color: #333;
+}
+.comment-time {
+  font-size: 24rpx;
+  color: #999;
+}
+.seller-reply {
+  margin-top: 12rpx;
+  padding: 12rpx;
+  background: #f6f6f6;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  color: #666;
+}
+.like-text {
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #777;
+}
+.empty-tip {
+  text-align: center;
+  padding: 60rpx 0;
+  font-size: 28rpx;
+  color: #aaa;
+}

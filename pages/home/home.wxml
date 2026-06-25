@@ -4,8 +4,8 @@
   <view class="top-header">
     <view class="header-row">
       <view class="header-left">首页</view>
-      <view class="header-location" bindtap="selectLocation">
-        <text>当前定位</text>
+      <view class="header-location" bind:tap="getLocation">
+        <text>当前定位：{{location}}</text>
       </view>
     </view>
     <!-- 搜索框 -->
@@ -50,8 +50,7 @@
       <text>暂无商家</text>
     </view>
     <view class="seller-list">
-      <view
-        class="seller-card card"
+      <view class="seller-card card"
         wx:for="{{sellerList}}"
         wx:key="id"
         data-id="{{item.id}}"
@@ -70,9 +69,6 @@
           <view class="seller-meta">
             <text class="text-tip text-tip--bold">{{item.score}}分</text>
           </view>
-          <button type="primary" size="mini" catch:tap="collect" data-id="{{item.id}}">
-            <text style="color: black;">收藏</text>
-          </button>
         </view>
       </view>
     </view>

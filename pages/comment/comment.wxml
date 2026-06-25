@@ -1,0 +1,27 @@
+<!--pages/comment/comment.wxml-->
+<view class="form-container">
+  <!-- 星级选择区域 -->
+  <view class="star-box">
+    <text class="label">评分</text>
+    <view class="star-group">
+      <text wx:for="{{5}}" wx:key="index"
+            bindtap="selectStar"
+            data-star="{{index + 1}}"
+            class="star {{(index + 1) <= score ? 'active' : '' }} " >
+        ★
+      </text>
+    </view>
+  </view>
+
+  <!-- 评价输入框 -->
+  <textarea class="input-area"
+            placeholder="分享你的用餐体验..."
+            bindinput="inContent"
+            value="{{content}}">
+  </textarea>
+
+  <!-- 提交按钮 -->
+  <button class="submit-btn" bindtap="subComment">
+    提交评价
+  </button>
+</view>

@@ -49,8 +49,8 @@ Page({
       url: url,
       success:res=>{
         console.log('搜索商家', res);
-        const map = new Map()
-        const uniqueShop = res.data.rows.filter(item=>{
+        let map = new Map()
+        let uniqueShop = res.data.rows.filter(item=>{
           if(map.has(item.id)) return false
           map.set(item.id, true)
           return true

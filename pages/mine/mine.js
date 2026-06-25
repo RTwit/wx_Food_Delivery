@@ -84,7 +84,7 @@ Page({
   },
   // 收货地址
   toAddress() {
-    const token = wx.getStorageSync('token')
+    let token = wx.getStorageSync('token')
     if (!token) {
       wx.showToast({
         title: '你还未登录',
@@ -92,8 +92,9 @@ Page({
       })
       return
     }
-    wx.navigateTo({ 
-      url: '/pages/address/address' 
+    wx.showToast({
+      title: '功能暂未开发',
+      icon: 'none'
     })
   },
   // 意见反馈

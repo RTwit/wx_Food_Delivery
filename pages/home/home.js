@@ -9,6 +9,7 @@ Page({
     ads:[],
     themeList:[],
     sellerList:[],
+    location:""
   },
 
   /**
@@ -18,7 +19,27 @@ Page({
     this.getADList()
     this.getThemeList()
     this.getNearSelList()
+    this.getLocation()
   },  
+
+  //获取当前定位
+  getLocation(){
+    let url = this.data.baseUrl + '/prod-api/api/common/gps/location'
+    wx.request({
+      url:url,
+      success:res=>{
+        console.log('当前地址：', res);
+        let locData = res.data.data
+        let addr = locData.province + locData.city + locData.area + locData.location
+        this.setData({
+          location: addr
+        })
+      },
+      fail:err=>{
+        console.log('获取当前地址错误：',err);
+      }
+    })
+  },
 
   //搜索
   onSearchTap(){
@@ -78,6 +99,7 @@ Page({
         url:'/pages/seller/seller'
       })
     },
+
     // 获取附近商家列表
     getNearSelList() {
       let url = this.data.baseUrl + '/prod-api/api/takeout/seller/near'
@@ -119,61 +141,6 @@ Page({
     this.getThemeList();
     this.getSellerList();
     wx.stopPullDownRefresh()
-  },
-
-  //收藏
-  collect(e){
-    let token = wx.getStorageSync('token')
-    //登录判断
-    if(!token){
-      wx.showModal({
-        title: '登录提示',
-        content: '收藏店铺需要先登录账号，是否去登录？',
-        confirmText: '去登录',
-        cancelText: '取消',
-        success: (res) => {
-          // 用户点击确认，跳登录页面
-          if (res.confirm) {
-            wx.navigateTo({
-              url: '/pages/login/login'
-            })
-          }
-        }
-      })
-      return
-    }
-    //主体
-    let sellerId = e.currentTarget.dataset.id
-    console.log('传递到sellerId:',sellerId);
-    let url = this.data.baseUrl + '/prod-api/api/takeout/collect'
-    wx.request({
-      url : url,
-      method : 'POST',
-      header:{
-        Authorization:token,
-        'content-type': 'application/json'
-      },
-      data: {
-        sellerId: Number(sellerId) 
-      },
-      success:res=>{
-        console.log('collect', res);
-        if(res.data.code == 200){
-          wx.showToast({
-            title: '收藏成功',
-          icon: 'success'
-        })
-        }else{
-          wx.showToast({
-            title: res.data.msg, 
-            icon:'none'
-          })
-        }
-      },
-      fail:err=>{
-        console.log(err);
-      }
-    })
   },
 
   /**
