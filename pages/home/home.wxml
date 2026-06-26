@@ -59,9 +59,7 @@
         bind:tap="toSellerDet"
       >
         <image class="seller-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" binderror="imgError"
-        data-index="{{index}}" lazy-load loading="lazy" 
-        placeholder="/images/pic-default.png" />
-      <view class="seller-img-placeholder" wx:if="{{!item.imgUrl}}"></view>
+        data-index="{{index}}" lazy-load loading="lazy" />
         <view class="seller-info">
           <text class="seller-name text-name">{{item.name}}</text>
           <view class="seller-meta">
