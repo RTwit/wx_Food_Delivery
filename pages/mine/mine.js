@@ -1,12 +1,13 @@
 // pages/mine/mine.js
 const app = getApp()
+const { get } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
     userInfo: null,
   },
 
@@ -31,26 +32,16 @@ Page({
   },
   // 加载用户信息
   getUserInfo() {
-    const token = wx.getStorageSync('token')
-    let url = this.data.baseUrl + '/prod-api/api/common/user/getInfo'
-    wx.request({
-      url : url,
-      header: {
-        Authorization:token
-      },
-      success:res=>{
-        console.log('userInfo',res);
-        if(res.data.code === 200) {
-          this.setData({
-            userInfo: res.data.user
-          })
-        app.globalData.userInfo = res.data.user
-        }
-      }, else (){
-        this.setData({ 
-          userInfo: null 
-        })
-      }
+    get('/api/common/user/getInfo').then(res => {
+      console.log('userInfo', res)
+      this.setData({
+        userInfo: res.user
+      })
+      app.globalData.userInfo = res.user
+    }).catch(() => {
+      this.setData({
+        userInfo: null
+      })
     })
   },
 

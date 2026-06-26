@@ -1,11 +1,12 @@
 // pages/order/order.js
+const { get } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
     odList:[],
     filList:[],
     currentTab:0,
@@ -46,43 +47,12 @@ Page({
 
   // 获取订单列表
   getOrderList() {
-    const token = wx.getStorageSync('token')
-    if (!token) {
-      wx.showToast({
-        title: '你还未登录',
-        icon: 'none'
+    get('/api/allorder/list').then(res => {
+      console.log('orderlist', res)
+      this.setData({
+        odList: res.rows
       })
-      return
-    }
-    wx.request({
-      url: this.data.baseUrl + '/prod-api/api/allorder/list',
-      method: 'GET',
-      header: {
-        Authorization: token,
-        'content-type': 'application/x-www-form-urlencoded'
-      },
-      success: res => {
-        if (res.data.code === 200) {
-          console.log('orderlist',res);
-          // 赋值订单
-          this.setData({
-            odList: res.data.rows
-          })
-          this.filterOd()
-        } else {
-          wx.showToast({
-            title: res.data.msg,
-            icon: 'none'
-          })
-        }
-      },
-      fail: () => {
-        console.log(err);
-        wx.showToast({
-          title: '网络请求失败',
-          icon: 'none'
-        })
-      }
+      this.filterOd()
     })
   },
 

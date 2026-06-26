@@ -1,11 +1,12 @@
 // pages/feedList/feedList.js
+const { get } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
     feedList:[],
   },
 
@@ -18,30 +19,10 @@ Page({
   
   // GET查询反馈列表
   getFeedList() {
-    const token = wx.getStorageSync('token')
-    wx.request({
-      url: this.data.baseUrl + '/prod-api/api/takeout/feedback/list',
-      method: "GET",
-      header: {
-        Authorization: token,
-        'content-type': 'application/x-www-form-urlencoded'
-      },
-      success: res => {
-        if (res.data.code === "200") {
-          this.setData({
-             feedList: res.data.rows 
-            })
-        } else {
-          wx.showToast({
-             title: res.data.msg, 
-             icon: "none" 
-            })
-        }
-      },
-      fail: () => wx.showToast({
-         title: "网络异常", 
-         icon: "none" 
-        })
+    get('/api/takeout/feedback/list').then(res => {
+      this.setData({
+        feedList: res.rows
+      })
     })
   },
   // 跳转详情，传递反馈id

@@ -52,6 +52,11 @@
           <text class="pro-desc">{{item.detail}}</text>
           <text class="pro-sales">月销{{item.saleQuantity}}</text>
         </view>
+        <view class="pro-actions">
+          <view class="qty-btn minus" bind:tap="decreaseQty" data-id="{{item.id}}" wx:if="{{item.qty > 0}}">-</view>
+          <text class="qty-num" wx:if="{{item.qty > 0}}">{{item.qty}}</text>
+          <view class="qty-btn plus" bind:tap="increaseQty" data-id="{{item.id}}">+</view>
+        </view>
       </view>
     </view>
   </view>
@@ -83,5 +88,20 @@
     <view wx:if="{{commentList.length === 0}}" class="empty-tip">
       暂无用户评价
     </view>
+  </view>
+</view>
+
+<!-- 底部购物车 -->
+<view class="cart-bar">
+  <view class="cart-left" bind:tap="toCart">
+    <view class="cart-icon">
+      <text>🛒</text>
+      <view class="cart-badge" wx:if="{{cartTotalNum > 0}}">{{cartTotalNum}}</view>
+    </view>
+    <text class="cart-text">购物车</text>
+  </view>
+  <view class="cart-right">
+    <text class="total-price">¥{{cartTotalPrice}}</text>
+    <button class="checkout-btn" bind:tap="toCart" disabled="{{cartTotalNum === 0}}">去结算</button>
   </view>
 </view>

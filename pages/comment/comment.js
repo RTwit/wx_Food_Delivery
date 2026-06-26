@@ -1,14 +1,15 @@
 // pages/comment/comment.js
+const { post } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl: "http://111.231.33.234:10001",
     sellerId: 0,
-    score:0,//评论星级
-    content: "" // 评价文字
+    score:0,
+    content: ""
   },
 
   /**
@@ -34,59 +35,27 @@ Page({
 
   // 提交评价
   subComment() {
-    let token = wx.getStorageSync('token')
-    let url = this.data.baseUrl + '/prod-api/api/takeout/comment'
-    // 表单校验
     if (this.data.score === 0) {
-      wx.showToast({
-         title: '请选择星级', 
-         icon: 'none' 
-        })
+      wx.showToast({ title: '请选择星级', icon: 'none' })
       return
     }
     if (!this.data.content.trim()) {
-      wx.showToast({
-         title: '请填写评价内容',
-          icon: 'none' 
-        })
+      wx.showToast({ title: '请填写评价内容', icon: 'none' })
       return
     }
 
-    wx.request({
-      url: url,
-      method: "POST",
-      header: {
-        Authorization: token,
-        'content-type': 'application/json'
-      },
-      data: {
-        content: this.data.content.trim(),
-        orderNo: "TEST001", // 固定测试订单号
-        score: this.data.score
-      },
-      success: res => {
-        console.log('subCommentT:',res);
-        if (res.data.code === "200") {
-          wx.showToast({
-             title: '评价成功' ,
-             complete: () => {
-              wx.navigateBack()
-            }
-          })
-        } else {
-          wx.showToast({
-             title: res.data.msg,
-              icon: 'none' 
-            })
+    post('/api/takeout/comment', {
+      content: this.data.content.trim(),
+      orderNo: "TEST001",
+      score: this.data.score
+    }).then(res => {
+      console.log('subCommentT:', res)
+      wx.showToast({
+        title: '评价成功',
+        complete: () => {
+          wx.navigateBack()
         }
-      },
-      fail: err => {
-        console.log('subCommentF',err);
-        wx.showToast({ 
-          title: '提交失败，请检查网络', 
-          icon: 'none'
-         })
-      }
+      })
     })
   },
 

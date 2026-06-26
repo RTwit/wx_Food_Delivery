@@ -1,11 +1,12 @@
 // pages/changeInfo/changeInfo.js
+const { put } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
     user:{}
   },
 
@@ -22,41 +23,16 @@ Page({
 
   // 提交修改
   saveUserInfo(e) {
-    const token = wx.getStorageSync('token')
     let formData = e.detail.value
-    // 校验必填昵称
     if (!formData.nickName) {
       wx.showToast({ title: '昵称不能为空', icon: 'none' })
       return
     }
-    wx.request({
-      url: this.data.baseUrl + '/prod-api/api/common/user',
-      method: 'PUT',
-      header: {
-        Authorization: token,
-        'content-type': 'application/json'
-      },
-      data: formData,
-      success: res => {
-        if (res.data.code === '200') {
-          wx.showToast({ 
-            title: res.data.msg 
-          })
-          // 延迟返回我的页面，刷新用户数据
-          setTimeout(() => {
-            wx.navigateBack()
-          }, 1200)
-        } else {
-          wx.showToast({ 
-            title: res.data.msg, icon: 'none' 
-          })
-        }
-      },
-      fail: () => {
-        wx.showToast({ 
-          title: '网络请求失败', icon: 'none' 
-        })
-      }
+    put('/api/common/user', formData).then(res => {
+      wx.showToast({ title: res.msg })
+      setTimeout(() => {
+        wx.navigateBack()
+      }, 1200)
     })
   },
 

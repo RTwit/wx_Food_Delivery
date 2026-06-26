@@ -1,11 +1,13 @@
 // pages/sellerDet/sellerDet.js
+const { get, post, del, IMG_BASE_URL } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl: 'http://111.231.33.234:10001',
+    baseUrl: IMG_BASE_URL,
     detailInfo: {},
     loading: true,
     catList:[],
@@ -15,6 +17,9 @@ Page({
     collId:null,
     commentList: [],
     totComment: 0,
+    cart: {},
+    cartTotalNum: 0,
+    cartTotalPrice: '0.00',
   },
 
   /**
@@ -26,39 +31,16 @@ Page({
     this.getSellerDet(sellerId)
     this.getCatList(sellerId)
     this.getCommentList(sellerId)
+    this.loadCart()
   },
   // 获取商家评论列表
   getCommentList(sellerId) {
-    let token = wx.getStorageSync('token')
-    let url = `${this.data.baseUrl}/prod-api/api/takeout/comment/list?sellerId=${sellerId}`
-    wx.request({
-      url: url,
-      header: {
-        Authorization: token,
-        'content-type': 'application/x-www-form-urlencoded'
-      },
-      success: res => {
-        console.log('评论commtent:',res);
-        if (res.data.code !== "200") {
-          wx.showToast({
-             title: res.data.msg, 
-             icon: 'none' 
-            })
-          return
-        }
-        // 赋值评论数据
-        self.setData({
-          commentList: res.data.rows,
-          commentTotal: res.data.total
-        })
-      },
-      fail: (err) => {
-        console.log('评论失败:',err);
-        wx.showToast({
-           title: '加载评论失败，网络异常', 
-           icon: 'none' 
-          })
-      }
+    get(`/api/takeout/comment/list?sellerId=${sellerId}`).then(res => {
+      console.log('评论commtent:', res)
+      this.setData({
+        commentList: res.rows,
+        commentTotal: res.total
+      })
     })
   },
 
@@ -71,47 +53,31 @@ Page({
 
   //检验是否收藏商家
   chkCollect(sellerId){
-    let token = wx.getStorageSync('token')
-    let url = `${this.data.baseUrl}/prod-api/api/takeout/collect/check?sellerId=${sellerId}`
-    wx.request({
-      url: url ,
-      header:{
-        Authorization:token,
-        'content-type':'application/x-www-form-urlencoded',
-      },
-      success: res => {
-        console.log('检验是否收藏:', res);
-        if(res.data.code == 200){
-          console.log('赋值前isCollect', this.data.isCollect)
-          this.setData({
-            isCollect: res.data.isCollect,
-            collId: res.data.id || null
-          }, ()=>{
-            // setData完成后的回调，打印最新值
-            console.log('赋值后isCollect', this.data.isCollect)
-          })
-        }
-      },
-      fail: (err) => {
-        console.log('检验是否收藏fou:', err);
-      }
+    get(`/api/takeout/collect/check?sellerId=${sellerId}`).then(res => {
+      console.log('检验是否收藏:', res)
+      this.setData({
+        isCollect: res.isCollect,
+        collId: res.id || null
+      }, () => {
+        console.log('赋值后isCollect', this.data.isCollect)
+      })
+    }).catch(err => {
+      console.log('检验是否收藏失败:', err)
     })
   },
 
   //点击/取消收藏切换
   chgCollect(){
-    let token = wx.getStorageSync('token')
-    let { baseUrl, isCollect, collId, detailInfo } = this.data
-    let sellerId = detailInfo.id//取出商家ID
-    //登录判断
-    if(!token){
+    const token = wx.getStorageSync('token')
+    let { isCollect, collId, detailInfo } = this.data
+    let sellerId = detailInfo.id
+    if (!token) {
       wx.showModal({
         title: '登录提示',
         content: '收藏店铺需要先登录账号，是否去登录？',
         confirmText: '去登录',
         cancelText: '取消',
         success: (res) => {
-          // 用户点击确认，跳登录页面
           if (res.confirm) {
             wx.navigateTo({
               url: '/pages/login/login'
@@ -122,125 +88,63 @@ Page({
       return
     }
   
-    // 当前未收藏 → 新增收藏
-    if(!isCollect){
-      let url = baseUrl + '/prod-api/api/takeout/collect'
-      wx.request({
-        url: url,
-        method:'POST',
-        header:{
-          Authorization: token,
-          'content-type':'application/json',
-        },
-        data: {
-          sellerId: Number(sellerId)
-        },
-        success:res=>{
-          console.log('addColl', res);
-          if(res.data.code == 200){
-            wx.showToast({
-              title: '收藏成功',
-              icon: 'success'
-            })
-            // 延迟1.6秒再查询，避开toast渲染阻塞
-            setTimeout(()=>{
-              this.chkCollect(sellerId)
-            }, 1600)
-          }else{
-            wx.showToast({
-              title: res.data.msg, 
-              icon:'none'
-            })
-          }
-        },
-        fail:err=>{
-          console.log('addColl',err);
-        }
+    if (!isCollect) {
+      post('/api/takeout/collect', { sellerId: Number(sellerId) }).then(res => {
+        console.log('addColl', res)
+        wx.showToast({
+          title: '收藏成功',
+          icon: 'success'
+        })
+        setTimeout(() => {
+          this.chkCollect(sellerId)
+        }, 1600)
       })
-    }
-    // 当前已收藏 → 取消收藏
-    else {
-      let url = `${baseUrl}/prod-api/api/takeout/collect/${collId}`
-      wx.request({
-        url: url,
-        method:'DELETE',
-        header:{
-          Authorization:token,
-          'content-type':'application/x-www-form-urlencoded',
-        },
-        success: res=>{
-          if(res.data.code == 200){
-            wx.showToast({title:'已取消收藏'})
-            setTimeout(()=>{
-              this.chkCollect(sellerId)
-            },1600)
-          }else{
-            wx.showToast({
-              title:res.data.msg,
-              icon:'none'
-            })
-          }
-        },
-        fail: err=>{
-          console.log('removeColl',err);
-        }
+    } else {
+      del(`/api/takeout/collect/${collId}`).then(res => {
+        wx.showToast({ title: '已取消收藏' })
+        setTimeout(() => {
+          this.chkCollect(sellerId)
+        }, 1600)
       })
     }
   },
 
   //获取商家详情
   getSellerDet(id) {
-    let url = this.data.baseUrl + '/prod-api/api/takeout/seller/' + id
-    let self = this
-    wx.request({
-      url:url,
-      success: res => {
-        console.log('sellerDet', res);
-          this.setData({
-            detailInfo: res.data.data,
-            loading: false
-          })
-          // 详情加载完毕，再查询收藏状态
-          self.chkCollect(id)
-      },
-      fail: () => {
-        this.setData({ loading: false })
-        wx.showToast({ title: '加载详情失败', icon: 'none' })
-      }
+    get(`/api/takeout/seller/${id}`, {}, { noToken: true }).then(res => {
+      console.log('sellerDet', res)
+      this.setData({
+        detailInfo: res.data,
+        loading: false
+      })
+      this.chkCollect(id)
+    }).catch(() => {
+      this.setData({ loading: false })
     })
   },
   // 获取商家菜品分类
   getCatList(sellerId) {
-    let url = this.data.baseUrl + "/prod-api/api/takeout/category/list?sellerId=" + sellerId
-    wx.request({
-      url : url,
-      success: res => {
-        console.log('catListT',res);
-        let catArr = res.data?.data || []
-          this.setData({
-            // 兜底：不存在则赋值空数组
-            catList: catArr,
-            curCatId: catArr.length > 0 ? catArr[0].id : null
-          })
-          // 默认加载第一个分类菜品
-          if(catArr.length > 0){
-            this.getProdList(sellerId, catArr[0].id)
-          }
-      },
-      fail:err =>{
-        console.log('catListF',err);
+    get(`/api/takeout/category/list?sellerId=${sellerId}`, {}, { noToken: true }).then(res => {
+      console.log('catListT', res)
+      let catArr = res.data || []
+      this.setData({
+        catList: catArr,
+        curCatId: catArr.length > 0 ? catArr[0].id : null
+      })
+      if (catArr.length > 0) {
+        this.getProdList(sellerId, catArr[0].id)
       }
+    }).catch(err => {
+      console.log('catListF', err)
     })
   },
    //根据商家id+分类id查询菜品
-   getProdList(sellerId, catId) {
-    let url = this.data.baseUrl + "/prod-api/api/takeout/product/list?sellerId=" + sellerId + "&categoryId=" + catId
-    wx.request({
-      url : url,
-      success: res => {
-        console.log('prodList',res);
-        this.setData({ prodList: res.data.data })
-      }
+  getProdList(sellerId, catId) {
+    get(`/api/takeout/product/list?sellerId=${sellerId}&categoryId=${catId}`, {}, { noToken: true }).then(res => {
+      console.log('prodList', res)
+      const products = res.data.map(item => ({ ...item, qty: 0 }))
+      this.setData({ prodList: products })
+      this.updateProdQty()
     })
   },
 
@@ -251,6 +155,88 @@ Page({
     this.setData({ curCatId: cid })
     this.getProdList(sellerId, cid)
   },
+
+  // 更新菜品数量
+  updateProdQty() {
+    const cart = this.data.cart
+    const prodList = this.data.prodList.map(item => ({
+      ...item,
+      qty: cart[String(item.id)] || 0
+    }))
+    this.setData({ prodList: prodList })
+  },
+
+  // 增加数量
+  increaseQty(e) {
+    const id = e.currentTarget.dataset.id
+    const prodList = this.data.prodList
+    const product = prodList.find(p => p.id === parseInt(id))
+    if (!product) return
+
+    const cart = { ...this.data.cart }
+    cart[id] = (cart[id] || 0) + 1
+    this.updateCart(cart)
+  },
+
+  // 减少数量
+  decreaseQty(e) {
+    const id = e.currentTarget.dataset.id
+    const cart = { ...this.data.cart }
+    if (cart[id] && cart[id] > 0) {
+      cart[id] -= 1
+      if (cart[id] === 0) {
+        delete cart[id]
+      }
+      this.updateCart(cart)
+    }
+  },
+
+  // 更新购物车
+  updateCart(cart) {
+    const prodList = this.data.prodList
+    let totalNum = 0
+    let totalPrice = 0
+
+    Object.keys(cart).forEach(id => {
+      const num = cart[id]
+      const product = prodList.find(p => p.id === parseInt(id))
+      if (product) {
+        totalNum += num
+        totalPrice += num * product.price
+      }
+    })
+
+    wx.setStorageSync('cart', {
+      sellerId: this.data.detailInfo.id,
+      sellerName: this.data.detailInfo.name,
+      items: cart,
+      prodList: prodList
+    })
+
+    const updatedProdList = prodList.map(item => ({
+      ...item,
+      qty: cart[String(item.id)] || 0
+    }))
+
+    this.setData({
+      cart,
+      prodList: updatedProdList,
+      cartTotalNum: totalNum,
+      cartTotalPrice: totalPrice.toFixed(2)
+    })
+  },
+
+  // 跳转到购物车
+  toCart() {
+    if (this.data.cartTotalNum === 0) {
+      wx.showToast({ title: '购物车为空', icon: 'none' })
+      return
+    }
+    wx.navigateTo({
+      url: '/pages/cart/cart'
+    })
+  },
+
   imgError() {
     this.setData({
       "detailInfo.imgUrl": "/images/pic-default.png"
@@ -268,7 +254,14 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow() {
+    this.loadCart()
+  },
 
+  // 加载购物车数据
+  loadCart() {
+    const cartData = wx.getStorageSync('cart') || {}
+    const items = cartData.items || {}
+    this.updateCart(items)
   },
 
   /**

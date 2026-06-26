@@ -1,11 +1,13 @@
 // pages/myCollect/myCollect.js
+const { get, del, IMG_BASE_URL } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
+    baseUrl: IMG_BASE_URL,
     list : [],
   },
 
@@ -18,49 +20,22 @@ Page({
 
   //获取收藏列表接口
   getCollList(){
-    let url = this.data.baseUrl + '/prod-api/api/takeout/collect/list'
-    let token = wx.getStorageSync('token')
-    wx.request({
-      url : url,
-      method : 'GET',
-      header: {
-        Authorization: token
-      },
-      success: res  =>{
-        console.log('collList',res);
-        this.setData({
-          list: res.data.rows
-        })
-      }
+    get('/api/takeout/collect/list').then(res => {
+      console.log('collList', res)
+      this.setData({
+        list: res.rows
+      })
     })
   },
 
   //取消收藏
   cancCollect(e){
-    let token = wx.getStorageSync('token')
     let collectId = e.currentTarget.dataset.id
-    // console.log('e.currentTarget完整对象：', e.currentTarget)
-    // console.log('dataset全部：', e.currentTarget.dataset)
     console.log('取消当前收藏id：', collectId)
-
-    let url = this.data.baseUrl + '/prod-api/api/takeout/collect/' + collectId
-    console.log('完整删除接口地址：', url)
-    wx.request({
-      url : url,
-      method : 'DELETE',
-      header: {
-        Authorization: token,
-        "Content-Type": "application/x-www-form-urlencoded"
-      },
-      success: res  =>{
-        console.log('cancCollect',res);
-        if(res.data.code == 200){
-          wx.showToast({title: '取消成功'})
-          this.getCollList()
-        }else{
-          wx.showToast({title:res.data.msg,icon:'none'})
-        }
-      }
+    del(`/api/takeout/collect/${collectId}`).then(res => {
+      console.log('cancCollect', res)
+      wx.showToast({ title: '取消成功' })
+      this.getCollList()
     })
   },
 

@@ -1,11 +1,12 @@
 // pages/feedDetail/feedDetail.js
+const { get } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
     feedInfo:{},
   },
 
@@ -19,30 +20,10 @@ Page({
 
   // GET路径传参获取详情
   getFeedDetail(id) {
-    const token = wx.getStorageSync('token')
-    wx.request({
-      url: `${this.data.baseUrl}/prod-api/api/takeout/feedback/${id}`,
-      method: "GET",
-      header: {
-        Authorization: token,
-        'content-type': 'application/x-www-form-urlencoded'
-      },
-      success: res => {
-        if (res.data.code === "200") {
-          this.setData({ 
-            feedInfo: res.data.data 
-          })
-        } else {
-          wx.showToast({
-             title: res.data.msg, 
-             icon: "none" 
-            })
-        }
-      },
-      fail: () => wx.showToast({
-         title: "网络异常", 
-         icon: "none" 
-        })
+    get(`/api/takeout/feedback/${id}`).then(res => {
+      this.setData({
+        feedInfo: res.data
+      })
     })
   },
 

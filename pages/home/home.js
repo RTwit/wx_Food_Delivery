@@ -1,15 +1,19 @@
 // pages/home/home.js
+const { get, IMG_BASE_URL } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
+    baseUrl: IMG_BASE_URL,
     ads:[],
     themeList:[],
     sellerList:[],
-    location:""
+    location:"",
+    keyword: "",
+    isSearching: false
   },
 
   /**
@@ -24,26 +28,51 @@ Page({
 
   //获取当前定位
   getLocation(){
-    let url = this.data.baseUrl + '/prod-api/api/common/gps/location'
-    wx.request({
-      url:url,
-      success:res=>{
-        console.log('当前地址：', res);
-        let locData = res.data.data
-        let addr = locData.province + locData.city + locData.area + locData.location
-        this.setData({
-          location: addr
-        })
-      },
-      fail:err=>{
-        console.log('获取当前地址错误：',err);
-      }
+    get('/api/common/gps/location', {}, { noToken: true }).then(res => {
+      console.log('当前地址：', res);
+      let locData = res.data
+      let addr = locData.province + locData.city + locData.area + locData.location
+      this.setData({
+        location: addr
+      })
+    }).catch(err => {
+      console.log('获取当前地址错误：', err);
     })
   },
 
-  //搜索
-  onSearchTap(){
-    wx.navigateTo({ url: '/pages/category/category?search=1' })
+  onSearchInput(e) {
+    this.setData({
+      keyword: e.detail.value
+    })
+  },
+
+  onSearchBlur() {
+    if (this.data.keyword === '') {
+      this.getNearSelList()
+      this.setData({ isSearching: false })
+    }
+  },
+
+  onSearchTap() {
+    if (!this.data.keyword.trim()) {
+      wx.showToast({ title: '请输入搜索内容', icon: 'none' })
+      return
+    }
+    this.setData({ isSearching: true })
+    get(`/api/takeout/search?pageNum=1&pageSize=10&keyword=${this.data.keyword}`, {}, { noToken: true }).then(res => {
+      console.log('搜索结果', res)
+      let map = new Map()
+      let uniqueShop = res.rows.filter(item => {
+        if (map.has(item.id)) return false
+        map.set(item.id, true)
+        return true
+      })
+      this.setData({
+        sellerList: uniqueShop
+      })
+    }).catch(() => {
+      wx.showToast({ title: '搜索失败', icon: 'none' })
+    })
   },
   //定位点击事件
   selectLocation(){
@@ -52,15 +81,11 @@ Page({
 
   // 轮播图列表
   getADList(){
-    let url = this.data.baseUrl + '/prod-api/api/takeout/rotation/list'
-    wx.request({
-      url: url,
-      success:res=>{
-        console.log('ads', res);
-        this.setData({
-          ads:res.data.rows
-        })
-      }
+    get('/api/takeout/rotation/list', {}, { noToken: true }).then(res => {
+      console.log('ads', res);
+      this.setData({
+        ads: res.rows
+      })
     })
   },
   // 轮播图点击
@@ -73,20 +98,16 @@ Page({
 
   // 主题分类列表
   getThemeList(){
-    let url = this.data.baseUrl + '/prod-api/api/takeout/theme/list'
-    wx.request({
-      url: url,
-      success:res=>{
-        console.log('themes', res);
-        this.setData({
-          themeList:res.data.data
-        })
-      }
+    get('/api/takeout/theme/list', {}, { noToken: true }).then(res => {
+      console.log('themes', res);
+      this.setData({
+        themeList: res.data
+      })
     })
   },
     // 点击分类
     toThemeTap(e) {
-      let theme = e.target.dataset.theme
+      let theme = e.currentTarget.dataset.theme
       wx.navigateTo({
         url: `/pages/seller/seller?themeId=${theme.id}&themeName=${theme.name}`
       })
@@ -101,23 +122,14 @@ Page({
     },
 
     // 获取附近商家列表
-    getNearSelList() {
-      let url = this.data.baseUrl + '/prod-api/api/takeout/seller/near'
-      wx.request({
-        url: url,
-        success: res => {
-          console.log('nearSel',res);
-          this.setData({
-            sellerList: res.data.rows
-          })  
-        },
-        fail: () => 
-        wx.showToast({
-           title: '网络加载失败', 
-           icon: 'none'
-           })
+  getNearSelList() {
+    get('/api/takeout/seller/near', {}, { noToken: true }).then(res => {
+      console.log('nearSel', res);
+      this.setData({
+        sellerList: res.rows
       })
-    },
+    })
+  },
     // 图片加载失败替换本地默认图
     imgError(e) {
       let idx = e.target.dataset.index

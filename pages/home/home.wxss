@@ -54,10 +54,11 @@ button.search-btn {
 button.search-btn::after {
   border: 0;
 }
-.search-placeholder {
-  /* margin-left: 12rpx; */
+.search-input {
+  flex: 1;
   font-size: 26rpx;
-  color: #999;
+  color: #333;
+  padding: 10rpx 0;
 }
 /* 轮播 */
 .ads-swiper {

@@ -1,40 +1,20 @@
 // pages/feedback/feedback.js
+const { post } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
   },
   // 提交反馈 POST接口
   subFeed(e) {
-    const token = wx.getStorageSync('token')
     const { title, content } = e.detail.value
-    wx.request({
-      url: this.data.baseUrl + '/prod-api/api/common/feedback',
-      method: "POST",
-      header: {
-        Authorization: token,
-        'content-type': 'application/json'
-      },
-      data: { title, content },
-      success: res => {
-        console.log('subFeed',res);
-        if (res.data.code === "200") {
-          wx.showToast({
-             title: res.data.msg 
-            })
-          setTimeout(()=>wx.navigateBack(),1200)
-        } else {
-          wx.showToast({
-             title: res.data.msg, icon: "none" 
-            })
-        }
-      },
-      fail: () => wx.showToast({
-         title: "网络异常", icon: "none" 
-        })
+    post('/api/common/feedback', { title, content }).then(res => {
+      console.log('subFeed', res)
+      wx.showToast({ title: res.msg })
+      setTimeout(() => wx.navigateBack(), 1200)
     })
   },
   // 跳转反馈列表

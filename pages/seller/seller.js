@@ -1,11 +1,13 @@
 // pages/seller/seller.js
+const { get, IMG_BASE_URL } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
+    baseUrl: IMG_BASE_URL,
     allSelList:[],
     schName: "",
     loading:false,
@@ -21,49 +23,34 @@ Page({
 
   //全部商家列表
   getAllSelList(){
-    //加载中
-    this.setData({
-       loading: true 
+    this.setData({ loading: true })
+    get('/api/takeout/seller/list', {}, { noToken: true }).then(res => {
+      console.log('allSeller', res)
+      this.setData({
+        allSelList: res.rows,
+        loading: false
       })
-    let url = this.data.baseUrl + '/prod-api/api/takeout/seller/list'
-    wx.request({
-      url: url,
-      success:res=>{
-        console.log('allSeller', res);
-        this.setData({
-          allSelList: res.data.rows,
-          loading: false
-        })
-      },
-      fail() {
-        this.setData({ loading: false })
-        wx.showToast({title:"加载商家失败", icon:"none"})
-      }
+    }).catch(() => {
+      this.setData({ loading: false })
     })
   },
   // 搜索方法
   schShop(keyword) {
     this.setData({ loading: true })
-    let url = this.data.baseUrl + '/prod-api/api/takeout/search?pageNum=1&pageSize=10&keyword=' + keyword
-    wx.request({
-      url: url,
-      success:res=>{
-        console.log('搜索商家', res);
-        let map = new Map()
-        let uniqueShop = res.data.rows.filter(item=>{
-          if(map.has(item.id)) return false
-          map.set(item.id, true)
-          return true
-        })
-        this.setData({
-          allSelList: uniqueShop,
-          loading: false
-        })
-      },
-      fail() {
-        this.setData({ loading: false })
-        wx.showToast({title:"搜索失败", icon:"none"})
-      }
+    get(`/api/takeout/search?pageNum=1&pageSize=10&keyword=${keyword}`, {}, { noToken: true }).then(res => {
+      console.log('搜索商家', res)
+      let map = new Map()
+      let uniqueShop = res.rows.filter(item => {
+        if (map.has(item.id)) return false
+        map.set(item.id, true)
+        return true
+      })
+      this.setData({
+        allSelList: uniqueShop,
+        loading: false
+      })
+    }).catch(() => {
+      this.setData({ loading: false })
     })
   },
   // 搜索输入框绑定

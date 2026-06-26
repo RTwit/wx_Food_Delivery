@@ -4,6 +4,7 @@
     "pages/comment/comment",
     "pages/login/login",
     "pages/regist/regist",
+    "pages/cart/cart",
     "pages/order/order",
     "pages/seller/seller",
     "pages/sellerDet/sellerDet",
@@ -32,6 +33,12 @@
         "text": "首页",
         "iconPath": "/images/home.png",
         "selectedIconPath": "/images/home-selected.png"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "text": "购物车",
+        "iconPath": "/images/cart.png",
+        "selectedIconPath": "/images/cart-selected.png"
       },
       {
         "pagePath": "pages/order/order",

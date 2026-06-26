@@ -10,12 +10,12 @@
     </view>
     <!-- 搜索框 -->
     <view class="search-wrap">
-      <text class="search-placeholder">搜索菜品、商家</text>
-      <button bindtap="onSearchTap" class="search-btn">搜索</button>
+      <input class="search-input" placeholder="搜索菜品、商家" bindinput="onSearchInput" value="{{keyword}}" bindblur="onSearchBlur"/>
+      <button bind:tap="onSearchTap" class="search-btn">搜索</button>
     </view>
   </view>
   <!-- 轮播图 -->
-  <swiper class="ads-swiper" wx:if="{{ads.length > 0 }}" indicator-dots autoplay interval="3000" indicator-active-color="red" indicator-color="white" circular>
+  <swiper class="ads-swiper" wx:if="{{!isSearching && ads.length > 0 }}" indicator-dots autoplay interval="3000" indicator-active-color="red" indicator-color="white" circular>
     <swiper-item wx:for="{{ads}}" wx:key="id">
       <image
         class="ads-img"
@@ -29,7 +29,7 @@
   </swiper>
 
   <!-- 主题分类 -->
-  <view class="theme-section" wx:if="{{themeList.length > 0 }} " >
+  <view class="theme-section" wx:if="{{!isSearching && themeList.length > 0 }} " >
     <scroll-view scroll-x class="theme-scroll">
       <view class="theme-item" wx:for="{{themeList}}" wx:key="id" data-theme="{{item}}" bind:tap="toThemeTap">
         <image class="theme-icon" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" />
@@ -38,11 +38,11 @@
     </scroll-view>
   </view>
 
-  <!-- 附近商家 -->
+  <!-- 搜索结果或附近商家 -->
   <view class="sticky-title-wrap">
   <view class="title-row">
-    <text class="section-title">附近商家</text>
-    <text class="more-btn" bind:tap="toSeller">更多 ></text>
+    <text class="section-title">{{isSearching ? '搜索结果' : '附近商家'}}</text>
+    <text class="more-btn" wx:if="{{!isSearching}}" bind:tap="toSeller">更多 ></text>
   </view>
 </view>
   <view class="seller-section">

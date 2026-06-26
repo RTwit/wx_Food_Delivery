@@ -1,11 +1,12 @@
 // pages/login/login.js
+const { post } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
     username:'',
     password:'',
   },
@@ -19,24 +20,17 @@ Page({
   },
 
   login(){
-    let url = this.data.baseUrl + '/prod-api/api/login'
-    wx.request({
-      url: url,
-      method:'POST',
-      data:{
-        username:this.data.username,
-        password:this.data.password
-      },
-      success:res=>{
-        console.log('login',res);
-        wx.setStorageSync('token', res.data.token)
-        wx.switchTab({
-          url: '/pages/mine/mine',
-        })
-      },
-      fail:err=>{
-        console.log(err);
-      }
+    post('/api/login', {
+      username: this.data.username,
+      password: this.data.password
+    }, { noToken: true }).then(res => {
+      console.log('login', res)
+      wx.setStorageSync('token', res.token)
+      wx.switchTab({
+        url: '/pages/mine/mine'
+      })
+    }).catch(err => {
+      console.log(err)
     })
   },
 

@@ -1,30 +1,24 @@
 // pages/regist/regist.js
+const { post } = require('../../utils/request')
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    baseUrl:'http://111.231.33.234:10001',
   },
 
   regist(e){
-    console.log(e);
+    console.log(e)
     let info = e.detail.value
-    let url= this.data.baseUrl+ '/prod-api/api/register'
-    wx.request({
-      url: url,
-      method:'POST',
-      data:info,
-      success:res=>{
-        console.log('regist',res);
-        wx.navigateTo({
-          url: '/pages/login/login',
-        })
-      },
-      fail:err=>{
-        console.log(err);
-      }
+    post('/api/register', info, { noToken: true }).then(res => {
+      console.log('regist', res)
+      wx.navigateTo({
+        url: '/pages/login/login'
+      })
+    }).catch(err => {
+      console.log(err)
     })
   },
 
