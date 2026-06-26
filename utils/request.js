@@ -11,7 +11,7 @@ const request = (options) => {
   if (!noToken) {
     const token = wx.getStorageSync('token')
     if (token) {
-      defaultHeader.Authorization = 'Token ' + token
+      defaultHeader.Authorization = 'Bearer ' + token
     }
   }
 
