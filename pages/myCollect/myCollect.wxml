@@ -5,7 +5,7 @@
 <view wx:else class="collect-list">
   <view wx:for="{{list}}" wx:key="id" class="collect-item">
     <!-- 店铺图片 -->
-    <image src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" class="shop-img"></image>
+    <image src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" class="shop-img" lazy-load loading="lazy"></image>
     <view class="shop-info">
       <text class="shop-name">{{item.sellerName}}</text>
       <text class="shop-tip">{{item.score}}分 | 月售{{item.saleQuantity}}</text>

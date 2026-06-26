@@ -24,6 +24,8 @@
         data-item="{{item}}"
         bind:tap="toAdsTap"
         style="width: 100%;"
+        lazy-load
+        loading="lazy"
       />
     </swiper-item>
   </swiper>
@@ -32,7 +34,7 @@
   <view class="theme-section" wx:if="{{!isSearching && themeList.length > 0 }} " >
     <scroll-view scroll-x class="theme-scroll">
       <view class="theme-item" wx:for="{{themeList}}" wx:key="id" data-theme="{{item}}" bind:tap="toThemeTap">
-        <image class="theme-icon" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" />
+        <image class="theme-icon" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" lazy-load loading="lazy" />
         <text class="theme-name">{{item.themeName}}</text>
       </view>
     </scroll-view>
@@ -57,7 +59,9 @@
         bind:tap="toSellerDet"
       >
         <image class="seller-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" binderror="imgError"
-        data-index="{{index}}"/>
+        data-index="{{index}}" lazy-load loading="lazy" 
+        placeholder="/images/pic-default.png" />
+      <view class="seller-img-placeholder" wx:if="{{!item.imgUrl}}"></view>
         <view class="seller-info">
           <text class="seller-name text-name">{{item.name}}</text>
           <view class="seller-meta">

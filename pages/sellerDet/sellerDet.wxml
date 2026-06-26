@@ -45,7 +45,7 @@
     <!-- 菜品列表 -->
     <view class="product-list">
       <view class="product-item" wx:for="{{prodList}}" wx:key="id">
-        <image class="pro-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" binderror="imgError"/>
+        <image class="pro-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" binderror="imgError" lazy-load loading="lazy" />
         <view class="pro-info">
           <text class="pro-name">{{item.name}}</text>
           <text class="pro-price">¥{{item.price}}</text>
@@ -71,7 +71,7 @@
     <block wx:for="{{commentList}}" wx:key="id">
       <view class="comment-item">
         <view class="user-row">
-          <image class="avatar" src="{{baseUrl}}{{item.avatar}}" mode="aspectFill"></image>
+          <image class="avatar" src="{{baseUrl}}{{item.avatar}}" mode="aspectFill" lazy-load loading="lazy"></image>
           <text class="nick">{{item.nickName}}</text>
         </view>
         <view class="comment-text">{{item.content}}</view>

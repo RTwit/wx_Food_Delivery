@@ -20,10 +20,36 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    this.getADList()
-    this.getThemeList()
-    this.getNearSelList()
-    this.getLocation()
+    this.loadCachedData()
+    Promise.all([
+      this.getADList(),
+      this.getThemeList(),
+      this.getNearSelList(),
+      this.getLocation()
+    ]).then(() => {
+      this.saveCachedData()
+    })
+  },
+
+  // 加载缓存数据
+  loadCachedData() {
+    const cachedAds = wx.getStorageSync('cached_ads')
+    const cachedThemes = wx.getStorageSync('cached_themes')
+    const cachedSellers = wx.getStorageSync('cached_sellers')
+    const cachedLocation = wx.getStorageSync('cached_location')
+    
+    if (cachedAds) this.setData({ ads: cachedAds })
+    if (cachedThemes) this.setData({ themeList: cachedThemes })
+    if (cachedSellers) this.setData({ sellerList: cachedSellers })
+    if (cachedLocation) this.setData({ location: cachedLocation })
+  },
+
+  // 保存缓存数据
+  saveCachedData() {
+    wx.setStorageSync('cached_ads', this.data.ads)
+    wx.setStorageSync('cached_themes', this.data.themeList)
+    wx.setStorageSync('cached_sellers', this.data.sellerList)
+    wx.setStorageSync('cached_location', this.data.location)
   },  
 
   //获取当前定位

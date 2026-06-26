@@ -11,7 +11,7 @@
   <!-- 商家列表 -->
   <view wx:else>
     <view class="seller-card" wx:for="{{allSelList}}" wx:key="id" bind:tap="toSellerDet" data-id="{{item.id}}">
-      <image class="seller-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill"/>
+      <image class="seller-img" src="{{baseUrl}}{{item.imgUrl}}" mode="aspectFill" lazy-load loading="lazy" />
       <view class="seller-info">
         <text class="seller-name">{{item.name}}</text>
         <text class="text-tip">人均¥{{item.avgCost}} | 月售{{item.saleQuantity}}</text>
